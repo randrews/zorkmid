@@ -1,6 +1,6 @@
 CHIP=atmega32u4
 MHZ=16
-UTILS=spi sd pff/diskio pff/pff usb_serial
+UTILS=pins pinutils spi sd pff/diskio pff/pff usb_serial
 APP=zorkmid
 CABLE=usbasp
 ##########

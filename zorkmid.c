@@ -2,6 +2,7 @@
 #include <util/delay.h>
 
 #include "pins.h"
+#include "pinutils.h"
 #include "usb_serial.h"
 #include "spi.h"
 #include "pff/pff.h"
@@ -14,24 +15,19 @@ void testFs();
 void actLed(int on);
 
 int main(){
-    SD_CS_DDR |= (1 << SD_CS_BIT);
-    ACT_LED_DDR |= (1 << ACT_LED_BIT);
+    pinOutput(ACT_LED);
 
 	usb_init();
-    initSPI(&SD_SCK_PORT, &SD_SCK_DDR, SD_SCK_BIT,
-            &SD_MISO_PORT, &SD_MISO_DDR, &SD_MISO_PIN, SD_MISO_BIT,
-            &SD_MOSI_PORT, &SD_MOSI_DDR, SD_MOSI_BIT);
-
+    initSPI(SD_MISO, SD_MOSI, SD_CLK);
     printString("ATmega32u4 Initialized\r\n");
 
     while(1) {
         testFs();
-        void usb_serial_flush_output(void);
         for(int n=0; n<3; n++){
             actLed(1);
-            _delay_ms(50);
+            _delay_ms(100);
             actLed(0);
-            _delay_ms(50);
+            _delay_ms(100);
         }
     }
 
@@ -40,9 +36,9 @@ int main(){
 
 void actLed(int on){
     if(on)
-        ACT_LED_PORT |= (1 << ACT_LED_BIT);
+        pinHigh(ACT_LED);
     else
-        ACT_LED_PORT &= ~(1 << ACT_LED_BIT);
+        pinLow(ACT_LED);
 }
 
 void testFs(){

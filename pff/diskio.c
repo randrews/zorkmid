@@ -11,7 +11,7 @@ DSTATUS disk_initialize (void)
 {
 	DSTATUS stat;
 
-    if(initSD(&SD_CS_PORT, &SD_CS_DDR, SD_CS_BIT) == 0){
+    if(initSD(SD_CS) == 0){
         // Failed:
         stat = RES_ERROR;
     } else {

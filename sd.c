@@ -1,12 +1,11 @@
 #include "sd.h"
+#include "pinutils.h"
 
-volatile uint8_t *sd_cs_port;
-volatile uint8_t *sd_cs_ddr;
-volatile uint8_t sd_cs_bit;
+Pin cs;
 
 void sd_select(byte selected){
-    if(!selected) *sd_cs_ddr |=  (1 << sd_cs_bit); // Write a 1, make it output, thus 0
-    else          *sd_cs_ddr &= ~(1 << sd_cs_bit); // Write a 0, make it input, thus 1
+    if(!selected) pinOutput(cs); // Make it output, thus 0
+    else          pinInput(cs); // Make it input, thus 1
 }
 
 // Returns 1 for card present
@@ -108,11 +107,10 @@ byte cmd50(){
 }
 
 // Returns nonzero on success
-int initSD(volatile uint8_t *sd_cs_port_p, volatile uint8_t* sd_cs_ddr_p, volatile uint8_t sd_cs_bit_p) {
-    sd_cs_port = sd_cs_port_p;
-    sd_cs_ddr = sd_cs_ddr_p;
-    sd_cs_bit = sd_cs_bit_p;
-    
+int initSD(Pin cs_p) {
+    cs = cs_p;
+    pinLow(cs);
+
     _delay_ms(10); // Ensure it's had time to power up
 
     // Send some clock pulses to let it awaken
