@@ -1,0 +1,3 @@
+- pff/ contains Petit FatFs, with a couple methods implemented in diskio.c
+- usb_serial.c and usb_serial.h are from PJRC, I didn't modify them
+- Everything else I wrote, and is released under the GPL version 3
