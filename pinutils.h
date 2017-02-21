@@ -9,4 +9,9 @@ void pinInput(Pin pin);
 void pinOutput(Pin pin);
 int readPin(Pin pin);
 
+void bankInput(Pin pin);
+void bankOutput(Pin pin);
+uint8_t readBank(Pin pin);
+void writeBank(Pin pin, uint8_t byte);
+
 #endif

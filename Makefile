@@ -1,8 +1,9 @@
 CHIP=atmega32u4
 MHZ=16
-UTILS=pins pinutils spi sd pff/diskio pff/pff usb_serial
+UTILS=pins pinutils spi sd ram pff/diskio pff/pff usb_serial
 APP=zorkmid
 CABLE=usbasp
+FUSES=-U lfuse:w:0xde:m -U hfuse:w:0xd9:m -U efuse:w:0xf3:m
 ##########
 
 GCC_ARGS=-mmcu=${CHIP} -Os -DF_CPU=${MHZ}000000 -std=gnu99 -Ipff/
@@ -30,3 +31,6 @@ clean:
 
 flash:
 	avrdude -p ${CHIP} -c ${CABLE} -Uflash:w:${APP}.hex
+
+fuses:
+	avrdude -p ${CHIP} -c ${CABLE} ${FUSES}

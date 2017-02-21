@@ -5,6 +5,7 @@
 #include "pinutils.h"
 #include "usb_serial.h"
 #include "spi.h"
+#include "ram.h"
 #include "pff/pff.h"
 
 void printString(const char myString[]);
@@ -12,17 +13,24 @@ void printStringHex(const char myString[], unsigned char c);
 void printHex(unsigned char a);
 int streq(const char* str1, const char* str2);
 void testFs();
+void testRam();
 void actLed(int on);
 
 int main(){
+    pinOutput(Z80RESET);
+    pinLow(Z80RESET);
     pinOutput(ACT_LED);
 
 	usb_init();
     initSPI(SD_MISO, SD_MOSI, SD_CLK);
+    initRam(RAM_SER, RAM_SCK, RAM_RCK, RAM_OE);
+    initBus(DATA, MREQ, READ, WRITE);
+
     printString("ATmega32u4 Initialized\r\n");
 
     while(1) {
         testFs();
+        testRam();
         for(int n=0; n<3; n++){
             actLed(1);
             _delay_ms(100);
@@ -39,6 +47,23 @@ void actLed(int on){
         pinHigh(ACT_LED);
     else
         pinLow(ACT_LED);
+}
+
+void testRam(){
+    controlBus();
+    uint8_t counter;
+    printStringHex("Reading counter byte 0xbeef: ", counter = readByte(0xbeef));
+    printStringHex("Writing byte to 0x12f1: ", 'a');
+    writeByte(0x12f1, 'a');
+    printStringHex("Writing byte to 0xf20f: ", 'z');
+    writeByte(0xf20f, 'z');
+    counter += 16;
+    printStringHex("Writing counter byte 0xbeef: ", counter);
+    writeByte(0xbeef, counter);
+    printStringHex("Reading byte from 0x12f1: ", readByte(0x12f1));
+    printStringHex("Reading byte from 0xf20f: ", readByte(0xf20f));
+    printString("--------------------\r\n");
+    releaseBus();
 }
 
 void testFs(){

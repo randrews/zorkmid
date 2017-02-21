@@ -31,12 +31,29 @@ int readPin(Pin pin){
         return 0;
 }
 
+void bankInput(Pin pin){
+    *(pinDdr(pin)) = 0x00;
+}
+
+void bankOutput(Pin pin){
+    *(pinDdr(pin)) = 0xff;
+}
+
+uint8_t readBank(Pin pin){
+    return *(pinPin(pin));
+}
+
+void writeBank(Pin pin, uint8_t byte){
+    *(pinPort(pin)) = byte;
+}
+
 volatile uint8_t *pinDdr(Pin pin){
     switch(pin.bank){
     case B: return &DDRB;
     case C: return &DDRC;
     case D: return &DDRD;
     case E: return &DDRE;
+    case F: return &DDRF;
     }
 }
 
@@ -46,6 +63,7 @@ volatile uint8_t *pinPort(Pin pin){
     case C: return &PORTC;
     case D: return &PORTD;
     case E: return &PORTE;
+    case F: return &PORTF;
     }
 }
 
@@ -55,5 +73,6 @@ volatile uint8_t *pinPin(Pin pin){
     case C: return &PINC;
     case D: return &PIND;
     case E: return &PINE;
+    case F: return &PINF;
     }
 }
