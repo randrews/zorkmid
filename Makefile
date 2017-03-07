@@ -1,6 +1,6 @@
 CHIP=atmega32u4
 MHZ=16
-UTILS=pins pinutils spi sd ram pff/diskio pff/pff usb_serial
+UTILS=pins pinutils spi sd ram z80 pff/diskio pff/pff usb_serial
 APP=zorkmid
 CABLE=usbasp
 FUSES=-U lfuse:w:0xde:m -U hfuse:w:0xd9:m -U efuse:w:0xf3:m

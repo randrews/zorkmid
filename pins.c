@@ -20,8 +20,11 @@ Pin MREQ    = {F, 1},
     WRITE   = {F, 5},
     READ    = {F, 4},
     Z80RESET= {F, 7},
-    WAIT    = {F, 6},
-    IORQ    = {F, 0};
+    WAIT    = {B, 3},
+    IORQ    = {F, 0},
+    BUSRQ   = {B, 2},
+    Z80INT  = {B, 1},
+    BUSAK   = {F, 6};
 
 // Data bus: the data bus is actually the entire "D" bank
 Pin DATA    = {D, 0};

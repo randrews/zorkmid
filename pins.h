@@ -16,5 +16,5 @@ extern Pin ACT_LED;
 extern Pin RAM_SER, RAM_SCK, RAM_RCK, RAM_OE;
 extern Pin MREQ, WRITE, READ;
 extern Pin Z80RESET, WAIT, IORQ;
-extern Pin DATA;
+extern Pin DATA, BUSRQ, Z80INT, BUSAK;
 #endif

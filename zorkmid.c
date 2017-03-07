@@ -6,6 +6,7 @@
 #include "usb_serial.h"
 #include "spi.h"
 #include "ram.h"
+#include "z80.h"
 #include "pff/pff.h"
 
 void printString(const char myString[]);
@@ -17,11 +18,10 @@ void testRam();
 void actLed(int on);
 
 int main(){
-    pinOutput(Z80RESET);
-    pinLow(Z80RESET);
     pinOutput(ACT_LED);
 
 	usb_init();
+    z80_init(Z80RESET, BUSRQ, BUSAK, WAIT);
     initSPI(SD_MISO, SD_MOSI, SD_CLK);
     initRam(RAM_SER, RAM_SCK, RAM_RCK, RAM_OE);
     initBus(DATA, MREQ, READ, WRITE);
@@ -29,6 +29,7 @@ int main(){
     printString("ATmega32u4 Initialized\r\n");
 
     while(1) {
+        _delay_ms(1000);
         testFs();
         testRam();
         for(int n=0; n<3; n++){
@@ -50,6 +51,7 @@ void actLed(int on){
 }
 
 void testRam(){
+    requestZ80Bus();
     controlBus();
     uint8_t counter;
     printStringHex("Reading counter byte 0xbeef: ", counter = readByte(0xbeef));
@@ -64,6 +66,7 @@ void testRam(){
     printStringHex("Reading byte from 0xf20f: ", readByte(0xf20f));
     printString("--------------------\r\n");
     releaseBus();
+    releaseZ80Bus();
 }
 
 void testFs(){
