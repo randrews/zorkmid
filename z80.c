@@ -1,5 +1,6 @@
 #include "z80.h"
 #include "pinutils.h"
+#include <util/delay.h>
 
 Pin reset, busrq, busak, wait;
 uint8_t bus_held;
@@ -28,3 +29,10 @@ void requestZ80Bus() {
 void releaseZ80Bus(){
     pinHigh(busrq);
 }
+
+void z80_start(){
+    pinHigh(wait);
+    pinLow(reset);
+    _delay_ms(100);
+    pinHigh(reset);
+};

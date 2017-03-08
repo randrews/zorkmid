@@ -6,5 +6,6 @@
 void z80_init(Pin reset, Pin busrq, Pin busak, Pin wait);
 void requestZ80Bus();
 void releaseZ80Bus();
+void z80_start();
 
 #endif

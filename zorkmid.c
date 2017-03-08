@@ -16,6 +16,7 @@ int streq(const char* str1, const char* str2);
 void testFs();
 void testRam();
 void actLed(int on);
+int loadFile(const char fname[]);
 
 int main(){
     pinOutput(ACT_LED);
@@ -28,18 +29,60 @@ int main(){
 
     printString("ATmega32u4 Initialized\r\n");
 
-    while(1) {
-        _delay_ms(1000);
-        testFs();
-        testRam();
+    while(loadFile("BOOT.OBJ"));
+
+    z80_start();
+    actLed(1);
+
+    return 0;
+}
+
+int loadFile(const char fname[]){
+    FATFS fs;
+    DIR dir;
+    FILINFO file;
+    FRESULT res;
+    uint16_t addr = 0x0000;
+    byte buf[512]; UINT count;
+
+    requestZ80Bus();
+    controlBus();
+    pf_mount(&fs);
+    res = pf_opendir(&dir, "");
+
+    while(1){
+        FRESULT read = pf_readdir(&dir, &file);
+        if(file.fname[0] == 0) break;
+    }
+
+    res = pf_open(fname);
+
+    if(!res){
         for(int n=0; n<3; n++){
             actLed(1);
             _delay_ms(100);
             actLed(0);
             _delay_ms(100);
         }
+    } else {
+        return 1;
     }
 
+    while(1){
+        res = pf_read(buf, 512, &count);
+        if(res || !count) break;
+
+        for(int n=0; n<count; n++)
+            writeByte(addr++, buf[n]);
+
+        actLed(1);
+        _delay_ms(50);
+        actLed(0);
+        _delay_ms(50);
+    }
+
+    releaseBus();
+    releaseZ80Bus();
     return 0;
 }
 
